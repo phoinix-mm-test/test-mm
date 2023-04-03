@@ -27,13 +27,9 @@ jobs:
           aws-region: us-east-1
           aws-access-key-id: ${{ secrets.PR_BUILDS_BUCKET_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PR_BUILDS_BUCKET_AWS_SECRET_ACCESS_KEY }}
-      # We need to sanitize the branch name before using it
-      - name: ci/sanitize-branch-name
-        id: branch
-        uses: transferwise/sanitize-branch-name@b10b4d524ac5a7b645b43a3527db3a6cca017b9d # v1
       # Search for the string "pull" and replace it with "PR" in branch-name
       - name: ci/sanitize-branch-name-replace-pull-with-PR-
-        run: echo "BRANCH_NAME=$(echo ${{ steps.branch.outputs.sanitized-branch-name }} | sed 's/^pull\//PR-/g')" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=$(echo ${{ github.ref_name }} | sed 's/^pull\//PR-/g')" >> $GITHUB_ENV
       - name: ci/artifact-upload
         run: |
           aws s3 cp ${{github.workspace}}/ s3://pr-builds.mattermost.com/$REPO_NAME/$BRANCH_NAME/ --acl public-read --cache-control "no-cache" --recursive
