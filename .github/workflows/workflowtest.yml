@@ -26,7 +26,7 @@ jobs:
           workflow_conclusion: success
           # workflow: artifacts.yml
           # pr: 22559
-          branch: MM-50550_deleteat-column
+          branch: master
           name: server-dist-artifact
           # Optional, defaults to current repo
           repo: mattermost/mattermost-server
