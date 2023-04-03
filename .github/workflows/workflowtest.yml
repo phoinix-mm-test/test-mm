@@ -11,7 +11,8 @@ jobs:
       REPO_NAME: ${{ github.event.repository.name }}
     if: >
       github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion == 'success'
+      github.event.workflow_run.conclusion == 'success' &&
+      contains(github.event.pull_request.labels.*.name, 'safe to test')
     steps:
       - name: Upload artifacts to S3
         id: download-artifact
