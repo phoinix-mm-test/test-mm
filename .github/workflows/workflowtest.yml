@@ -32,5 +32,5 @@ jobs:
           # Optional, defaults to current repo
           # repo: mattermost/mattermost-server
           if_no_artifact_found: warn
-      - name: ci/mkdir
-        run: ls -la ${{github.workspace}}/server/dist/
+      # - name: ci/mkdir
+      #   run: ls -la ${{github.workspace}}/server/dist/
