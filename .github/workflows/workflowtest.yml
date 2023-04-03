@@ -29,7 +29,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.PR_BUILDS_BUCKET_AWS_SECRET_ACCESS_KEY }}
       # Search for the string "pull" and replace it with "PR" in branch-name
       - name: ci/get-branch-name
-        run: echo "BRANCH_NAME=$(echo ${{ github.ref_name }} | sed 's/^pull\//PR-/g')" >> $GITHUB_ENV
+        run: |
+          echo "BRANCH_NAME=$(echo ${{ github.ref_name }} | sed 's/^pull\//PR-/g')" >> $GITHUB_ENV
+          echo "Branch name is: $BRANCH_NAME"
       - name: ci/artifact-upload
         run: |
           aws s3 cp ${{github.workspace}}/ s3://pr-builds.mattermost.com/$REPO_NAME/$BRANCH_NAME/ --acl public-read --cache-control "no-cache" --recursive
