@@ -17,23 +17,30 @@ jobs:
     steps:
       - name: 'Download artifact'
         run: echo "in workflow"
-      #   uses: actions/github-script@v3.1.0
-      #   with:
-      #     script: |
-      #       var artifacts = await github.actions.listWorkflowRunArtifacts({
-      #          owner: context.repo.owner,
-      #          repo: context.repo.repo,
-      #          run_id: ${{github.event.workflow_run.id }},
-      #       });
-      #       var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-      #         return artifact.name == "pr"
-      #       })[0];
-      #       var download = await github.actions.downloadArtifact({
-      #          owner: context.repo.owner,
-      #          repo: context.repo.repo,
-      #          artifact_id: matchArtifact.id,
-      #          archive_format: 'zip',
-      #       });
-      #       var fs = require('fs');
-      #       fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
-      # - run: unzip pr.zip
+      - name: ci/mkdir
+        run: mkdir -p ${{github.workspace}}/server/dist/
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow_conclusion: success
+          # Optional, will get head commit SHA
+          pr: 22709
+          name: 'server-dist-artifact'
+          # Optional, a directory where to extract artifact(s), defaults to the current directory
+          path: ${{github.workspace}}/server/dist/
+          # Optional, defaults to current repo
+          repo: "https://github.com/mattermost/mattermost-server"
+          # Optional, search for the last workflow run whose stored an artifact named as in `name` input
+          # default false
+          search_artifacts: false
+          # Optional, choose to skip unpacking the downloaded artifact(s)
+          # default false
+          skip_unpack: false
+          # Optional, choose how to exit the action if no artifact is found
+          # can be one of:
+          #  "fail", "warn", "ignore"
+          # default fail
+          if_no_artifact_found: fail
+      - name: ci/mkdir
+        run: ls -la ${{github.workspace}}/server/dist/

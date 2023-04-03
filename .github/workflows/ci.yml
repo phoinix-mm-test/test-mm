@@ -12,4 +12,4 @@ jobs:
       - name: Test echo
         run: echo "test 123"
       - name: Test sleep
-        run: time sleep 10
+        run: time sleep 30
