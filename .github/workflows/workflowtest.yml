@@ -30,7 +30,7 @@ jobs:
           # # Optional, a directory where to extract artifact(s), defaults to the current directory
           # path: '${{github.workspace}}/server/dist'
           # Optional, defaults to current repo
-          repo: mattermost/mattermost-server
+          # repo: mattermost/mattermost-server
           if_no_artifact_found: warn
       - name: ci/mkdir
         run: ls -la ${{github.workspace}}/server/dist/
