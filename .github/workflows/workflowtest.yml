@@ -1,4 +1,4 @@
-name: Comment on the pull request
+name: Test artifact download
 
 # read-write repo token
 # access to secrets
@@ -30,7 +30,7 @@ jobs:
           # Optional, a directory where to extract artifact(s), defaults to the current directory
           path: ${{github.workspace}}/server/dist/
           # Optional, defaults to current repo
-          repo: "https://github.com/mattermost/mattermost-server"
+          repo: 'mattermost/mattermost-server'
           # Optional, search for the last workflow run whose stored an artifact named as in `name` input
           # default false
           search_artifacts: false
