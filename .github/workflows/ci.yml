@@ -1,0 +1,13 @@
+name: test
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+jobs:
+  test-1:
+    name: Test-1
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Test echo
+        run: echo "test 123"
