@@ -27,7 +27,7 @@ jobs:
           # workflow: artifacts.yml
           # pr: 22559
           run_id: 4582016437
-          branch: master
+          # branch: master
           name: server-dist-artifact
           # Optional, defaults to current repo
           repo: mattermost/mattermost-server
