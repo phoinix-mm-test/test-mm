@@ -1,4 +1,4 @@
-name: Test artifact download
+name: Artifacts Handling for testss
 on:
   workflow_run:
     workflows: ["Test Ole Super"]
@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REPO_NAME: ${{ github.event.repository.name }}
-    # if: >
-    #   github.event.workflow_run.event == 'pull_request' &&
-    #   github.event.workflow_run.conclusion == 'success'
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
     steps:
-      - name: Download artifact
+      - name: Upload artifacts to S3
         id: download-artifact
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -39,14 +39,14 @@ jobs:
           aws s3 cp ${{github.workspace}}/ s3://pr-builds.mattermost.com/$REPO_NAME/$BRANCH_NAME/ --acl public-read --cache-control "no-cache" --recursive
           aws s3 cp ${{github.workspace}}/ s3://pr-builds.mattermost.com/$REPO_NAME/commit/${{ github.sha }}/ --acl public-read --cache-control "no-cache" --recursive
   build-docker:
-    name: Build docker image
+    name: Build and push test docker image
     needs: upload-s3
     env:
       REPO_NAME: ${{ github.event.repository.name }}
     runs-on: ubuntu-22.04
-    # if: >
-    #   github.event.workflow_run.event == 'pull_request' &&
-    #   github.event.workflow_run.conclusion == 'success'
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
     steps:
     - name: Download artifact
       id: download-artifact
@@ -73,21 +73,19 @@ jobs:
         export DOCKER_CLI_EXPERIMENTAL=enabled
         export MM_PACKAGE=https://pr-builds.mattermost.com/$REPO_NAME/commit/${{ github.sha }}/mattermost-team-linux-amd64.tar.gz
         docker buildx build --push --build-arg MM_PACKAGE=$MM_PACKAGE -t mattermostdevelopment/mm-te-test:${TAG} .
-
-
-  #   sentry:
-  #     name: Send build info to sentry
-  #     if: >
-  #       github.event.workflow_run.event == 'pull_request' &&
-  #       github.event.workflow_run.conclusion == 'success'
-  #     runs-on: ubuntu-22.04
-  #     env:
-  #       SENTRY_AUTH_TOKEN: ${{ secrets.MM_SERVER_SENTRY_AUTH_TOKEN }}
-  #       SENTRY_ORG: ${{ secrets.MM_SERVER_SENTRY_ORG }}
-  #       SENTRY_PROJECT: ${{ secrets.MM_SERVER_SENTRY_PROJECT }}
-  #     steps:
-  #       - name: Checkout mattermost-server
-  #         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-  #       - name: Create Sentry release
-  #         uses: getsentry/action-release@85e0095193a153d57c458995f99d0afd81b9e5ea # v1.3.0
+  # sentry:
+  #   name: Send build info to sentry
+  #   if: >
+  #     github.event.workflow_run.event == 'pull_request' &&
+  #     github.event.workflow_run.conclusion == 'success'
+  #   runs-on: ubuntu-22.04
+  #   env:
+  #     SENTRY_AUTH_TOKEN: ${{ secrets.MM_SERVER_SENTRY_AUTH_TOKEN }}
+  #     SENTRY_ORG: ${{ secrets.MM_SERVER_SENTRY_ORG }}
+  #     SENTRY_PROJECT: ${{ secrets.MM_SERVER_SENTRY_PROJECT }}
+  #   steps:
+  #     - name: Checkout mattermost-server
+  #       uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+  #     - name: Create Sentry release
+  #       uses: getsentry/action-release@85e0095193a153d57c458995f99d0afd81b9e5ea # v1.3.0
 
