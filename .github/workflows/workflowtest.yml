@@ -25,10 +25,9 @@ jobs:
         with:
           workflow_conclusion: success
           # workflow: artifacts.yml
-          # pr: 22709
-          # name: server-dist-artifact
-          # # Optional, a directory where to extract artifact(s), defaults to the current directory
-          # path: '${{github.workspace}}/server/dist'
+          # pr: 22559
+          branch: MM-50550_deleteat-column
+          name: server-dist-artifact
           # Optional, defaults to current repo
           repo: mattermost/mattermost-server
           if_no_artifact_found: warn
