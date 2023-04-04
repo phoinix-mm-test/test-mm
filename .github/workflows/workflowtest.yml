@@ -20,6 +20,7 @@ jobs:
         with:
           workflow_conclusion: success
           run_id: 4582016437
+          path: ${{github.workspace}}/server/dist
           name: server-dist-artifact
           repo: mattermost/mattermost-server
       - name: Configure AWS
@@ -35,8 +36,8 @@ jobs:
           echo "Branch name is: $BRANCH_NAME"
       - name: ci/artifact-upload
         run: |
-          aws s3 cp ${{github.workspace}}/ s3://pr-builds.mattermost.com/$REPO_NAME/$BRANCH_NAME/ --acl public-read --cache-control "no-cache" --recursive --no-progress
-          aws s3 cp ${{github.workspace}}/ s3://pr-builds.mattermost.com/$REPO_NAME/commit/${{ github.sha }}/ --acl public-read --cache-control "no-cache" --recursive --no-progress
+          aws s3 cp ${{github.workspace}}/server/dist s3://pr-builds.mattermost.com/$REPO_NAME/$BRANCH_NAME/ --acl public-read --cache-control "no-cache" --recursive --no-progress
+          aws s3 cp ${{github.workspace}}/server/dist s3://pr-builds.mattermost.com/$REPO_NAME/commit/${{ github.sha }}/ --acl public-read --cache-control "no-cache" --recursive --no-progress
   build-docker:
     name: Build and push test docker image
     needs: upload-s3
